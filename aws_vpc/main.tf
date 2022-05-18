@@ -17,7 +17,7 @@ Create the VPC
    vpc_id =  aws_vpc.Main.id
    cidr_block = "${var.private_subnets}"          # CIDR block of private subnets
  }
- Route table for Public Subnet's
+
  resource "aws_route_table" "PublicRT" {    # Creating RT for Public Subnet
     vpc_id =  aws_vpc.Main.id
          route {
@@ -25,7 +25,7 @@ Create the VPC
     gateway_id = aws_internet_gateway.IGW.id
      }
  }
- Route table for Private Subnet's
+
  resource "aws_route_table" "PrivateRT" {    # Creating RT for Private Subnet
    vpc_id = aws_vpc.Main.id
    route {
@@ -33,7 +33,7 @@ Create the VPC
    nat_gateway_id = aws_nat_gateway.NATgw.id
    }
  }
- Route table Association with Public Subnet's
+
  resource "aws_route_table_association" "PublicRTassociation" {
     subnet_id = aws_subnet.publicsubnets.id
     route_table_id = aws_route_table.PublicRT.id
