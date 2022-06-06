@@ -88,7 +88,7 @@ resource "bigip_ltm_virtual_server" "http_redirect" {
   destination = var.vs_ip
   port        = 80
   profiles       = ["/Common/http"]
-  irules      = ["/Common/irule_elk_hsl_http", "/Common/${var.web_fqdn}_redirect_80"]
+  irules      = ["/Common/irule_elk_hsl_http", "/Common/irule_${var.web_fqdn}_redirect_80"]
 }
 resource "bigip_ltm_virtual_server" "vs" {
   name                       = "/Common/vs_${var.web_fqdn}_${var.client_port}"
