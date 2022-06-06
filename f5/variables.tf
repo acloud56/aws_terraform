@@ -23,10 +23,10 @@ variable "ssl_policy" {
   type    = "string"
 }
 variable "http_redirect" {
-  type    = "string"
+  type    = "boolean"
 }
 variable "ssl_redirect" {
-  type    = "string"
+  type    = "boolean"
 }
 variable "server_1" {
   type    = "string"
