@@ -1,5 +1,5 @@
 resource "bigip_ltm_node" "node_1" {
-  name             = var.server_1
+  name             = "/Common/${var.server_1}"
   address          = "${var.server_1}.dimensional.com"
   fqdn {
     address_family = "ipv4"
@@ -7,7 +7,7 @@ resource "bigip_ltm_node" "node_1" {
   }
 }
 resource "bigip_ltm_node" "node_2" {
-  name             = var.server_2
+  name             = "/Common/${var.server_2}"
   address          = "${var.server_2}.dimensional.com"
   fqdn {
     address_family = "ipv4"
@@ -26,7 +26,7 @@ resource "bigip_ltm_monitor" "http_monitor" {
 }
 resource "bigip_ltm_monitor" "https_monitor" {
   count       = (var.monitor_type == "https" ? 1 : 0)
-  name        = "monitor_${var.web_fqdn}_https"
+  name        = "/Common/monitor_${var.web_fqdn}_https"
   parent      = "/Common/https"
   send        = "${var.monitor_string} HTTP/1.1\r\nHost: ${var.web_fqdn}\r\nUser-Agent: F5_Check\r\n\r\n"
   receive     = var.monitor_success
@@ -95,9 +95,9 @@ resource "bigip_ltm_virtual_server" "vs" {
   pool                       = "/Common/${var.web_fqdn}_${var.server_port}"
   profiles                   = ["http_x-forwarded-for"]
   client_profiles            = [(var.ssl_policy == "offload" ? "/Common/${var.client_ssl_profile}" : null), (var.ssl_policy == "intercept" ? "/Common/${var.client_ssl_profile}" : null) ]
-  server_profiles            = [var.ssl_policy == "intercept" ? "/Common/serverssl" : null]
+  server_profiles            = [var.ssl_policy == "intercept" ? "/Common/serverssl" : ""]
   source_address_translation = "automap"
   persistence_profiles       = [(var.client_persistence == "both" ? "cookie" : "")]
   fallback_persistence_profile = (var.client_persistence == "both" ? "source_addr" : "")
-  irules                     = ["/Common/irule_auto_5xx", (var.outage_action == "irule_auto_5xx" ? "/Common/irule_auto_5xx" : null), (var.outage_action == "generic_html_outage" ? "/Common/irule_auto_generic_outage" : null), (var.ssl_redirect == "true" ? "/Common/irule_${var.web_fqdn}_redirect_443" : null) ]
+  irules                     = ["/Common/irule_auto_5xx", (var.outage_action == "irule_auto_5xx" ? "/Common/irule_auto_5xx" : ""), (var.outage_action == "generic_html_outage" ? "/Common/irule_auto_generic_outage" : "", (var.ssl_redirect == "true" ? "/Common/irule_${var.web_fqdn}_redirect_443" : "") ]
 }
