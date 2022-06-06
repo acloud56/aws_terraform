@@ -97,7 +97,7 @@ resource "bigip_ltm_virtual_server" "vs" {
   client_profiles            = [(var.ssl_policy == "offload" ? "/Common/${var.client_ssl_profile}" : null), (var.ssl_policy == "intercept" ? "/Common/${var.client_ssl_profile}" : null) ]
   server_profiles            = [var.ssl_policy == "intercept" ? "/Common/serverssl" : null]
   source_address_translation = "automap"
-  persistence_profiles       = (var.client_persistence == "both" ? "cookie" : "")
-  fallback_persistence_profile = (var.client_persistence == "both" ? "source_addr" : "")
+  persistence_profiles       = [(var.client_persistence == "both" ? "cookie" : "")]
+  fallback_persistence_profile = [(var.client_persistence == "both" ? "source_addr" : "")]
   irules                     = ["/Common/irule_auto_5xx", (var.outage_action == "irule_auto_5xx" ? "/Common/irule_auto_5xx" : null), (var.outage_action == "generic_html_outage" ? "/Common/irule_auto_generic_outage" : null), (var.ssl_redirect == "true" ? "/Common/irule_${var.web_fqdn}_redirect_443" : null) ]
 }
