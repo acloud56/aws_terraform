@@ -38,7 +38,7 @@ resource "bigip_ltm_pool" "pool" {
   name                   = "/Common/${var.web_fqdn}_${var.server_port}"
   load_balancing_mode    = "round-robin"
   minimum_active_members = 1
-  monitors               = (var.monitor_type == "http" ? "monitor_${var.web_fqdn}_http" : "monitor_${var.web_fqdn}_https")
+  monitors               = [(var.monitor_type == "http" ? "monitor_${var.web_fqdn}_http" : "monitor_${var.web_fqdn}_https")]
 }
 resource "bigip_ltm_pool_attachment" "attach_node" {
   pool = bigip_ltm_pool.pool.name
@@ -85,7 +85,7 @@ resource "bigip_ltm_virtual_server" "http_redirect" {
   name        = "/Common/vs_${var.web_fqdn}_80"
   destination = var.vs_ip
   port        = 80
-  profiles       = "http"
+  profiles       = ["/Common/http"]
   irules      = ["/Common/irule_elk_hsl_http", "/Common/${var.web_fqdn}_redirect_80"]
 }
 resource "bigip_ltm_virtual_server" "vs" {
@@ -93,11 +93,11 @@ resource "bigip_ltm_virtual_server" "vs" {
   destination                = var.vs_ip
   port                       = var.client_port
   pool                       = "/Common/${var.web_fqdn}_${var.server_port}"
-  profiles                   = "http_x-forwarded-for"
+  profiles                   = ["http_x-forwarded-for"]
   client_profiles            = [(var.ssl_policy == "offload" ? "/Common/${var.client_ssl_profile}" : null), (var.ssl_policy == "intercept" ? "/Common/${var.client_ssl_profile}" : null) ]
   server_profiles            = [var.ssl_policy == "intercept" ? "/Common/serverssl" : null]
   source_address_translation = "automap"
-  persistence_profiles       = var.client_persistence == "both" ? "cookie" : ""
-  fallback_persistence_profile = var.client_persistence == "both" ? "source_addr" : ""
+  persistence_profiles       = (var.client_persistence == "both" ? "cookie" : "")
+  fallback_persistence_profile = (var.client_persistence == "both" ? "source_addr" : "")
   irules                     = ["/Common/irule_auto_5xx", (var.outage_action == "irule_auto_5xx" ? "/Common/irule_auto_5xx" : null), (var.outage_action == "generic_html_outage" ? "/Common/irule_auto_generic_outage" : null), (var.ssl_redirect == "true" ? "/Common/irule_${var.web_fqdn}_redirect_443" : null) ]
 }
