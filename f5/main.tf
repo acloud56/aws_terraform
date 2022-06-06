@@ -50,7 +50,7 @@ resource "bigip_ltm_pool_attachment" "attach_node2" {
 }
 resource "bigip_ltm_irule" "http_redirect" {
   count       = (var.http_redirect == "yes" ? 1 : 0)
-  name  = "/Common/irule_${var.web.fqdn}_redirect_80"
+  name  = "/Common/irule_${var.web_fqdn}_redirect_80"
   irule = <<EOF
 when HTTP_REQUEST {
            switch -glob [string tolower [HTTP::host]] {
@@ -66,7 +66,7 @@ EOF
 }
 resource "bigip_ltm_irule" "https_redirect" {
   count       = (var.ssl_redirect == "yes" ? 1 : 0)
-  name  = "/Common/irule_${var.web.fqdn}_redirect_443"
+  name  = "/Common/irule_${var.web_fqdn}_redirect_443"
   irule = <<EOF
 when HTTP_REQUEST {
            switch -glob [string tolower [HTTP::host]] {
@@ -85,7 +85,7 @@ resource "bigip_ltm_virtual_server" "http_redirect" {
   name        = "/Common/vs_${var.web_fqdn}_80"
   destination = var.vs_ip
   port        = 80
-  profiles       = "/Common/http"
+  profiles       = "http"
   irules      = ["/Common/irule_elk_hsl_http", "/Common/${var.web_fqdn}_redirect_80"]
 }
 resource "bigip_ltm_virtual_server" "vs" {
