@@ -35,7 +35,7 @@ resource "bigip_ltm_monitor" "https_monitor" {
   password =  "gso5YN!itJH3bKpI=ARQ"
 }
 resource "bigip_ltm_pool" "pool" {
-  name                   = "/Common/${var.web_fqdn}_${var.server_port}"
+  name                   = "/Common/pool_${var.web_fqdn}_${var.server_port}"
   load_balancing_mode    = "round-robin"
   minimum_active_members = 1
   monitors               = [(var.monitor_type == "http" ? "monitor_${var.web_fqdn}_http" : "monitor_${var.web_fqdn}_https")]
@@ -92,7 +92,7 @@ resource "bigip_ltm_virtual_server" "vs" {
   name                       = "/Common/vs_${var.web_fqdn}_${var.client_port}"
   destination                = var.vs_ip
   port                       = var.client_port
-  pool                       = "/Common/${var.web_fqdn}_${var.server_port}"
+  pool                       = "/Common/pool_${var.web_fqdn}_${var.server_port}"
   profiles                   = ["http_x-forwarded-for"]
   client_profiles            = [(var.ssl_policy == "offload" ? "/Common/${var.client_ssl_profile}" : ""), (var.ssl_policy == "intercept" ? "/Common/${var.client_ssl_profile}" : "") ]
   server_profiles            = [var.ssl_policy == "intercept" ? "/Common/serverssl" : ""]
