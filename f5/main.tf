@@ -14,7 +14,7 @@ resource "bigip_ltm_node" "node_2" {
     interval       = "3600"
   }
 }
-resource "bigip_ltm_monitor" "http monitor" {
+resource "bigip_ltm_monitor" "http_monitor" {
   count       = (var.monitor_type == "http" ? 1 : 0)
   name        = "monitor_${var.web_fqdn}_http"
   parent      = "/Common/http"
@@ -24,7 +24,7 @@ resource "bigip_ltm_monitor" "http monitor" {
   username = "DFA_PRIMARY\\F5_service"
   password =  "gso5YN!itJH3bKpI=ARQ"
 }
-resource "bigip_ltm_monitor" "https monitor" {
+resource "bigip_ltm_monitor" "https_monitor" {
   count       = (var.monitor_type == "https" ? 1 : 0)
   name        = "monitor_${var.web_fqdn}_https"
   parent      = "/Common/https"
