@@ -49,7 +49,7 @@ resource "bigip_ltm_pool_attachment" "attach_node2" {
   node = bigip_ltm_node.node_2.name
 }
 resource "bigip_ltm_irule" "http_redirect" {
-  count       = (var.http_redirect == true ? 1 : 0)
+  count       = (var.http_redirect == "yes" ? 1 : 0)
   name  = "/Common/irule_${var.web.fqdn}_redirect_80"
   irule = <<EOF
 when HTTP_REQUEST {
@@ -65,7 +65,7 @@ when HTTP_REQUEST {
 EOF
 }
 resource "bigip_ltm_irule" "https_redirect" {
-  count       = (var.ssl_redirect == true ? 1 : 0)
+  count       = (var.ssl_redirect == "yes" ? 1 : 0)
   name  = "/Common/irule_${var.web.fqdn}_redirect_443"
   irule = <<EOF
 when HTTP_REQUEST {
@@ -81,7 +81,7 @@ when HTTP_REQUEST {
 EOF
 }
 resource "bigip_ltm_virtual_server" "http_redirect" {
-  count      = (var.ssl_redirect == true ? 1 : 0)
+  count      = (var.ssl_redirect == "yes" ? 1 : 0)
   name        = "/Common/vs_${var.web_fqdn}_80"
   destination = var.vs_ip
   port        = 80
