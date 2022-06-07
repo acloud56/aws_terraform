@@ -42,12 +42,12 @@ resource "bigip_ltm_pool" "pool" {
 }
 resource "bigip_ltm_pool_attachment" "attach_node" {
   pool = bigip_ltm_pool.pool.name
-  node = bigip_ltm_node.node_1.name
+  node = "${bigip_ltm_node.node_1.name}:${var.client_port}"
   depends_on = [bigip_ltm_pool.pool]
 }
 resource "bigip_ltm_pool_attachment" "attach_node2" {
   pool = bigip_ltm_pool.pool.name
-  node = bigip_ltm_node.node_2.name
+  node = "${bigip_ltm_node.node_2.name}:${var.client_port}"
   depends_on = [bigip_ltm_pool.pool]
 }
 resource "bigip_ltm_irule" "http_redirect" {
