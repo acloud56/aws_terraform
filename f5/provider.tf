@@ -2,6 +2,7 @@ terraform {
   required_providers {
     bigip = {
       source = "terraform-providers/bigip"
+      version = "~> 1.1.1"
     }
   }
   required_version = ">= 0.13"
