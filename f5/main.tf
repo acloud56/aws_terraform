@@ -1,6 +1,6 @@
 locals {
-  sever_pro     = flatten([(var.client_persistence == "both" ? "cookie" :[], (var.client_persistence == "none" ? [] : var.client_persistence)])
-  client        = flatten([(var.ssl_policy == "offload" || var.ssl_policy == "intercept" ? "/Common/${var.client_ssl_profile}" : [] ])
+  sever_pro     = [(var.client_persistence == "both" ? "cookie" :[], (var.client_persistence == "none" ? [] : var.client_persistence)]
+  client        = [(var.ssl_policy == "offload" || var.ssl_policy == "intercept" ? "/Common/${var.client_ssl_profile}" : [] ]
 }
 
 resource "bigip_ltm_node" "node_1" {
