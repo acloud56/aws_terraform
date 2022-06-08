@@ -97,11 +97,11 @@ resource "bigip_ltm_virtual_server" "vs" {
   port                       = var.client_port
   pool                       = "/Common/pool_${var.web_fqdn}_${var.server_port}"
   profiles                   = ["http_x-forwarded-for"]
-  client_profiles            = [(var.ssl_policy == "offload" ? "/Common/${var.client_ssl_profile}" : (var.ssl_policy == "intercept" ? "/Common/${var.client_ssl_profile}" : "")) ]
-  server_profiles            = [var.ssl_policy == "intercept" ? "/Common/serverssl" : ""]
+  client_profiles            = [(var.ssl_policy == "offload" ? "/Common/${var.client_ssl_profile}" : (var.ssl_policy == "intercept" ? "/Common/${var.client_ssl_profile}" : var.override)) ]
+  server_profiles            = [var.ssl_policy == "intercept" ? "/Common/serverssl" : "var.override"]
   source_address_translation = "automap"
-  persistence_profiles       = [(var.client_persistence == "both" ? "cookie" : (var.client_persistence == "none" ? "universal" : var.client_persistence))]
-  fallback_persistence_profile = (var.client_persistence == "both" ? "source_addr" : "universal")
+  persistence_profiles       = [(var.client_persistence == "both" ? "cookie" : (var.client_persistence == "none" ? var.override : var.client_persistence))]
+  fallback_persistence_profile = (var.client_persistence == "both" ? "source_addr" : var.override)
   irules                     = ["/Common/irule_elk_hsl_http","/Common/irule_${var.web_fqdn}_redirect_443",(var.outage_action == "irule_auto_5xx" ? "/Common/irule_auto_5xx" : "/Common/irule_auto_generic_outage")]
   depends_on                 = [bigip_ltm_pool.pool]
 }
@@ -112,11 +112,11 @@ resource "bigip_ltm_virtual_server" "vs1" {
   port                       = var.client_port
   pool                       = "/Common/pool_${var.web_fqdn}_${var.server_port}"
   profiles                   = ["http_x-forwarded-for"]
-  client_profiles            = [(var.ssl_policy == "offload" ? "/Common/${var.client_ssl_profile}" : (var.ssl_policy == "intercept" ? "/Common/${var.client_ssl_profile}" : "")) ]
-  server_profiles            = [var.ssl_policy == "intercept" ? "/Common/serverssl" : "universal"]
+  client_profiles            = [(var.ssl_policy == "offload" ? "/Common/${var.client_ssl_profile}" : (var.ssl_policy == "intercept" ? "/Common/${var.client_ssl_profile}" : var.override)) ]
+  server_profiles            = [var.ssl_policy == "intercept" ? "/Common/serverssl" : var.override]
   source_address_translation = "automap"
-  persistence_profiles       = [(var.client_persistence == "both" ? "cookie" : (var.client_persistence == "none" ? "universal" : var.client_persistence))]
-  fallback_persistence_profile = (var.client_persistence == "both" ? "source_addr" : "universal")
+  persistence_profiles       = [(var.client_persistence == "both" ? "cookie" : (var.client_persistence == "none" ? var.override : var.client_persistence))]
+  fallback_persistence_profile = (var.client_persistence == "both" ? "source_addr" : var.override)
   irules                     = ["/Common/irule_elk_hsl_http",(var.outage_action == "irule_auto_5xx" ? "/Common/irule_auto_5xx" : "/Common/irule_auto_generic_outage")]
   depends_on                 = [bigip_ltm_pool.pool]
 }
