@@ -96,7 +96,11 @@ resource "bigip_ltm_virtual_server" "vs" {
   port                       = var.client_port
   pool                       = "/Common/pool_${var.web_fqdn}_${var.server_port}"
   profiles                   = ["http_x-forwarded-for"]
+  client_profiles            = [(var.ssl_policy == "offload" ? "/Common/${var.client_ssl_profile}" : "")(var.ssl_policy == "intercept" ? "/Common/${var.client_ssl_profile}" : "") ]
+  server_profiles            = [var.ssl_policy == "intercept" ? "/Common/serverssl" : ""]
   source_address_translation = "automap"
-  irules                     = ["/Common/irule_elk_hsl_http","/Common/irule_auto_5xx"]
+  persistence_profiles       = [(var.client_persistence == "both" ? "cookie" : "")(var.client_persistence == "none" ? "" : var.client_persistence]
+  fallback_persistence_profile = (var.client_persistence == "both" ? "source_addr" : "")
+  irules                     = ["/Common/irule_elk_hsl_http" (var.outage_action == "irule_auto_5xx" ? ",/Common/irule_auto_5xx" : ""), (var.outage_action == ",generic_html_outage" ? "/Common/irule_auto_generic_outage" : ""), (var.ssl_redirect == "true" ? ",/Common/irule_${var.web_fqdn}_redirect_443" : "") ]
   depends_on                 = [bigip_ltm_pool.pool]
 }
