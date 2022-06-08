@@ -97,6 +97,6 @@ resource "bigip_ltm_virtual_server" "vs" {
   pool                       = "/Common/pool_${var.web_fqdn}_${var.server_port}"
   profiles                   = ["http_x-forwarded-for"]
   source_address_translation = "automap"
-  irules                     = ["/Common/irule_auto_5xx"]
+  irules                     = ["/Common/irule_elk_hsl_http","/Common/irule_auto_5xx"]
   depends_on                 = [bigip_ltm_pool.pool]
 }
