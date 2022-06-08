@@ -39,6 +39,7 @@ resource "bigip_ltm_pool" "pool" {
   load_balancing_mode    = "round-robin"
   minimum_active_members = 1
   monitors               = [(var.monitor_type == "http" ? "monitor_${var.web_fqdn}_http" : "monitor_${var.web_fqdn}_https")]
+  depends_on             = [(var.monitor_type == "http" ? bigip_ltm_monitor.http_monitor : bigip_ltm_monitor.https_monitor)]
 }
 resource "bigip_ltm_pool_attachment" "attach_node" {
   pool = bigip_ltm_pool.pool.name
@@ -101,7 +102,6 @@ resource "bigip_ltm_virtual_server" "vs" {
   source_address_translation = "automap"
   persistence_profiles       = [(var.client_persistence == "both" ? "cookie" : (var.client_persistence == "none" ? "" : var.client_persistence))]
   fallback_persistence_profile = (var.client_persistence == "both" ? "source_addr" : "")
-  irules                     = ["/Common/irule_elk_hsl_http",(var.outage_action == "irule_auto_5xx" ? "/Common/irule_auto_5xx" : "/Common/irule_auto_generic_outage")  ]
-  irules                     = [(var.ssl_redirect == "yes" ? "/Common/irule_${var.web_fqdn}_redirect_443" : "")]
+  irules                     = ["/Common/irule_elk_hsl_http",(var.outage_action == "irule_auto_5xx" ? "/Common/irule_auto_5xx" : "/Common/irule_auto_generic_outage"),(var.ssl_redirect == "yes" ? "/Common/irule_${var.web_fqdn}_redirect_443" : "")  ]
   depends_on                 = [bigip_ltm_pool.pool]
 }
