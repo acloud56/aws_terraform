@@ -64,3 +64,7 @@ variable "vs_ip" {
 variable "monitor_type" {
   type    = string
 }
+variable "override" {
+  type    = string
+  default = null
+}
