@@ -39,7 +39,6 @@ resource "bigip_ltm_pool" "pool" {
   load_balancing_mode    = "round-robin"
   minimum_active_members = 1
   monitors               = [(var.monitor_type == "http" ? "monitor_${var.web_fqdn}_http" : "monitor_${var.web_fqdn}_https")]
-  depends_on             = [(var.monitor_type == "http" ? bigip_ltm_monitor.http_monitor : bigip_ltm_monitor.https_monitor)]
 }
 resource "bigip_ltm_pool_attachment" "attach_node" {
   pool = bigip_ltm_pool.pool.name
