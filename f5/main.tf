@@ -1,5 +1,5 @@
 locals {
-  sever_pro     = [(var.client_persistence == "both" ? "cookie" :[], (var.client_persistence == "none" ? [] : var.client_persistence)]
+  sever_pro     = [(var.client_persistence == "both" ? "cookie" : [], (var.client_persistence == "none" ? [] : var.client_persistence)]
   client        = [(var.ssl_policy == "offload" || var.ssl_policy == "intercept" ? "/Common/${var.client_ssl_profile}" : [] ]
 }
 
