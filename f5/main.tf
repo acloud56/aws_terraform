@@ -98,7 +98,7 @@ resource "bigip_ltm_virtual_server" "vs" {
   pool                       = "/Common/pool_${var.web_fqdn}_${var.server_port}"
   profiles                   = ["http_x-forwarded-for"]
   client_profiles            = [(var.ssl_policy == "offload" ? "/Common/${var.client_ssl_profile}" : (var.ssl_policy == "intercept" ? "/Common/${var.client_ssl_profile}" : var.override)) ]
-  server_profiles            = [var.ssl_policy == "intercept" ? "/Common/serverssl" : "var.override"]
+  server_profiles            = [var.ssl_policy == "intercept" ? "/Common/serverssl" : var.override]
   source_address_translation = "automap"
   persistence_profiles       = [(var.client_persistence == "both" ? "cookie" : (var.client_persistence == "none" ? var.override : var.client_persistence))]
   fallback_persistence_profile = (var.client_persistence == "both" ? "source_addr" : var.override)
