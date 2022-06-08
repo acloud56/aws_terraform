@@ -1,66 +1,66 @@
 variable "environment" {
-  type    = "string"
+  type    = string
 }
 variable "location" {
-  type    = "string"
+  type    = string
 }
 variable "datacenter" {
-  type    = "string"
+  type    = string
 }
 variable "web_fqdn" {
-  type    = "string"
+  type    = string
 }
 variable "client_port" {
-  type    = "string"
+  type    = string
 }
 variable "client_persistence" {
-  type    = "string"
+  type    = string
 }
 variable "ssl" {
-  type    = "string"
+  type    = string
 }
 variable "ssl_policy" {
-  type    = "string"
+  type    = string
 }
 variable "http_redirect" {
-  type    = "string"
+  type    = string
 }
 variable "ssl_redirect" {
-  type    = "string"
+  type    = string
 }
 variable "server_1" {
-  type    = "string"
+  type    = string
 }
 variable "server_2" {
-  type    = "string"
+  type    = string
 }
 variable "server_port" {
-  type    = "string"
+  type    = string
 }
 variable "monitor_string" {
-  type    = "string"
+  type    = string
 }
 variable "monitor_success" {
-  type    = "string"
+  type    = string
 }
 variable "monitor_auth" {
-  type    = "string"
+  type    = string
 }
 variable "maint_flag" {
-  type    = "string"
+  type    = string
 }
 variable "outage_action" {
-  type    = "string"
+  type    = string
 }
 variable "client_ssl_profile" {
-  type    = "string"
+  type    = string
 }
 variable "route_domain" {
-  type    = "string"
+  type    = string
 }
 variable "vs_ip" {
-  type    = "string"
+  type    = string
 }
 variable "monitor_type" {
-  type    = "string"
+  type    = string
 }
