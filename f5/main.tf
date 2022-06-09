@@ -100,8 +100,8 @@ resource "bigip_ltm_virtual_server" "vs" {
   client_profiles            = var.ssl_policy == "offload" || var.ssl_policy == "intercept" ? ["/Common/${var.client_ssl_profile}"] : []
   server_profiles            = var.ssl_policy == "intercept" ? "[/Common/serverssl]" : []
   source_address_translation = "automap"
-  persistence_profiles       = [(var.client_persistence == "both" ? "cookie" : (var.client_persistence == "none" ? var.override : var.client_persistence))]
- fallback_persistence_profile = var.client_persistence == "both" ? "source_addr" : ""
+  persistence_profiles       = var.client_persistence == "both" ? ["cookie"] : var.client_persistence == "none" ? [] : [var.client_persistence]
+  fallback_persistence_profile = var.client_persistence == "both" ? "source_addr" : ""
   irules                     = var.outage_action == "irule_auto_5xx" ? ["/Common/irule_elk_hsl_http","/Common/irule_auto_5xx"] : ["/Common/irule_elk_hsl_http","/Common/irule_auto_generic_outage"]
   depends_on                 = [bigip_ltm_pool.pool]
 }
@@ -115,7 +115,7 @@ resource "bigip_ltm_virtual_server" "vs1" {
   client_profiles            = var.ssl_policy == "offload" || var.ssl_policy == "intercept" ? ["/Common/${var.client_ssl_profile}"] : []
   server_profiles            = var.ssl_policy == "intercept" ? "[/Common/serverssl]" : []
   source_address_translation = "automap"
-  persistence_profiles       = local.sever_pro
+  persistence_profiles       = var.client_persistence == "both" ? ["cookie"] : var.client_persistence == "none" ? [] : [var.client_persistence]
   fallback_persistence_profile = var.client_persistence == "both" ? "source_addr" : ""
   irules                     = var.outage_action == "irule_auto_5xx" ? ["/Common/irule_elk_hsl_http","/Common/irule_auto_5xx"] : ["/Common/irule_elk_hsl_http","/Common/irule_auto_generic_outage"]
   depends_on                 = [bigip_ltm_pool.pool]
