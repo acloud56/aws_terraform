@@ -14,7 +14,7 @@ resource "bigip_ltm_node" "node_2" {
     interval       = "3600"
   }
 }
-resource "bigip_ltm_monitor" "monitor_http" {
+resource "bigip_ltm_monitor" "monitorhttp" {
   count       = (var.monitor_type == "http" ? 1 : 0)
   name        = "monitor_${var.web_fqdn}_http"
   parent      = "/Common/http"
@@ -24,7 +24,7 @@ resource "bigip_ltm_monitor" "monitor_http" {
   username = "DFA_PRIMARY\\F5_service"
   password =  "gso5YN!itJH3bKpI=ARQ"
 }
-resource "bigip_ltm_monitor" "monitor_https" {
+resource "bigip_ltm_monitor" "monitorhttps" {
   count       = (var.monitor_type == "https" ? 1 : 0)
   name        = "/Common/monitor_${var.web_fqdn}_https"
   parent      = "/Common/https"
@@ -39,7 +39,7 @@ resource "bigip_ltm_pool" "pool" {
   load_balancing_mode    = "round-robin"
   minimum_active_members = 1
   monitors               = [(var.monitor_type == "http" ? "monitor_${var.web_fqdn}_http" : "monitor_${var.web_fqdn}_https")]
-  depends_on = [bigip_ltm_monitor.monitor_http,bigip_ltm_monitor.monitor_https]
+  depends_on = [bigip_ltm_monitor.monitorhttp,bigip_ltm_monitor.monitorhttps]
 }
 resource "bigip_ltm_pool_attachment" "attach_node" {
   pool = bigip_ltm_pool.pool.name
