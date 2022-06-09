@@ -64,15 +64,3 @@ variable "vs_ip" {
 variable "monitor_type" {
   type    = string
 }
-variable "client" {
-  type    = list(string)
-}
-variable "sever_pro" {
-  type    = list(string)
-}
-variable "irule" {
-  type    = list(string)
-}
-variable "override" {
-  type    = string
-  default = null
